@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+
+</head>
+<style type="text/css">
+		a{
+			display: inline-block;
+
+			position: relative;
+			height: 150px;
+			width:400px;
+
+			background-color: #000;
+			margin: 10px;
+
+			border:solid 2px red;
+			text-decoration: none;
+			color: #FFF;
+
+			margin-top: 20%;
+			font-family: Arial;
+		}
+		body{
+			background-image: url("fondo.jpeg");
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 75%;
+			background-color: black;
+			height: 100vh;
+			width: 100vw;
+			display: flex;
+			align-content: center;
+			justify-content: center;
+		}
+		.estacion-apodo{
+			position: absolute;
+			top: 2px;
+			left: 3px;
+			font-size: 20pt;
+		}
+		.estacion-ubicacion{
+			position: absolute;
+			bottom: 50px;
+			left: 3px;
+			font-size: 15pt;
+		}
+		.estacion-visitas{
+			position: absolute;
+			bottom: 4px;
+			right: 4px;
+			font-size: 12pt;
+
+		}
+</style>
+<body>
+	
+	<template>
+		<a class="boton-estacion" href="">
+			
+			<div class="estacion-apodo"></div>
+			<div class="estacion-ubicacion"></div>
+			<div class="estacion-visitas"></div>
+		</a>
+	</template>
+
+	<script type="text/javascript">
+		let text = document.querySelector("#text");
+
+		document.addEventListener("DOMContentLoaded", () => {
+
+			
+			loadManifest().then(data =>{
+				
+				var temp = document.getElementsByTagName("template")[0]
+
+				var chipidTemp = temp.content.querySelector("a");
+
+				for (var i = 0; i < data.length -1; i++) {
+
+					chipid = document.importNode(chipidTemp, true);
+
+					chipid.setAttribute("href","detalle.php?chipid=" + data[i].chipid );
+					document.body.appendChild(chipid);
+
+					document.getElementsByClassName("estacion-apodo")[i].innerHTML = data[i].apodo;
+					document.getElementsByClassName("estacion-ubicacion")[i].innerHTML = '<i class="fas fa-map-marker-alt color-ubicacion" aria-hidden="true"></i>&nbsp;' +data[i].ubicacion;
+					document.getElementsByClassName("estacion-visitas")[i].innerHTML = '&nbsp;<i class="fa-solid fa-tower-observation color-visitas"></i>' +data[i].visitas;
+
+				}
+			})
+
+
+		})
+
+		async function loadManifest (){
+			
+			const resp = await fetch("https://mattprofe.com.ar/proyectos/app-estacion/datos.php?mode=list-stations")
+			const data = await resp.json()
+
+			return data
+		}
+
+	</script>
+
+</body>
+</html>
